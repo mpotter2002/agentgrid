@@ -2,24 +2,18 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import EscrowStatusBadge from "@/components/EscrowStatus";
-import ReputationBadge from "@/components/ReputationBadge";
 
-// Mock data for demo
 const mockTask = {
   taskId: "task-001",
   description: "Research DeFi protocols: Jupiter, Raydium, Orca. Return structured JSON with TVL, fees, differentiators.",
   status: "Open",
-  stakeAmount: 1_000_000_000,
-  escrowStatus: "Active" as const,
+  stakeAmount: "1.0 SOL",
+  escrowStatus: "Active",
   requester: "7xKXTGbD8KtC2ewdHUGQAKt4mWTF7JhPgJEpuS8q7qKt",
-  assignedAgent: null as string | null,
-  resultCid: null,
-  parentTaskId: null,
   subTasks: [
-    { taskId: "task-001a", description: "Research Jupiter DEX", status: "InProgress", agent: "Agent123..." },
-    { taskId: "task-001b", description: "Research Raydium AMM", status: "Open", agent: null },
-    { taskId: "task-001c", description: "Research Orca Whirlpools", status: "Open", agent: null },
+    { taskId: "task-001a", description: "Research Jupiter DEX aggregator", status: "InProgress", agent: "Agent123... *_verified" },
+    { taskId: "task-001b", description: "Research Raydium AMM liquidity pools", status: "Open", agent: null },
+    { taskId: "task-001c", description: "Research Orca Whirlpools concentrated liquidity", status: "Open", agent: null },
   ],
 };
 
@@ -28,101 +22,112 @@ export default function TaskDetailPage() {
   const taskId = params.id as string;
 
   return (
-    <div className="min-h-screen">
-      <nav className="flex justify-between items-center px-6 py-4 border-b border-border">
-        <Link href="/tasks" className="text-primary font-mono font-bold text-xl">AgentGrid</Link>
-        <Link href="/tasks" className="text-sm text-gray-400 hover:text-primary">← Back</Link>
+    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace" }}>
+      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #1e1e2e" }}>
+        <Link href="/" style={{ color: "#00ff87", fontWeight: "bold", fontSize: "20px", textDecoration: "none" }}>AgentGrid</Link>
+        <Link href="/tasks" style={{ fontSize: "14px", color: "#94a3b8", textDecoration: "none" }}>← Back to Tasks</Link>
       </nav>
 
-      <div className="px-6 py-8 max-w-4xl mx-auto">
+      <div style={{ padding: "32px 24px", maxWidth: "1000px", margin: "0 auto" }}>
         {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="font-mono text-xs text-gray-500">{taskId}</span>
-            <span className="text-xs font-mono font-bold text-primary bg-primary/10 border border-primary/30 px-2 py-0.5 rounded">
-              {mockTask.status}
+        <div style={{ marginBottom: "32px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+            <span style={{ fontSize: "12px", color: "#64748b" }}>{taskId}</span>
+            <span style={{ fontSize: "10px", fontWeight: "bold", padding: "3px 8px", borderRadius: "4px", background: "rgba(0,255,135,0.1)", color: "#00ff87", border: "1px solid rgba(0,255,135,0.3)" }}>
+              {mockTask.status.toUpperCase()}
             </span>
           </div>
-          <h1 className="text-xl font-mono font-bold">{mockTask.description}</h1>
+          <h1 style={{ fontSize: "20px", fontWeight: "bold", lineHeight: "1.4" }}>{mockTask.description}</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
           {/* Left: Task Info */}
-          <div className="space-y-4">
-            <div className="bg-surface border border-border rounded-lg p-4">
-              <div className="text-xs text-gray-500 font-mono mb-3">ESCROW</div>
-              <EscrowStatusBadge status={mockTask.escrowStatus} amount={mockTask.stakeAmount} />
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            {/* Escrow */}
+            <div style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "12px" }}>ESCROW</div>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#00ff87", boxShadow: "0 0 8px #00ff87" }} />
+                <span style={{ color: "#00ff87", fontSize: "14px", fontWeight: "bold" }}>{mockTask.escrowStatus}</span>
+                <span style={{ fontSize: "14px", color: "#e2e8f0", marginLeft: "auto" }}>{mockTask.stakeAmount}</span>
+              </div>
             </div>
 
-            <div className="bg-surface border border-border rounded-lg p-4">
-              <div className="text-xs text-gray-500 font-mono mb-3">DETAILS</div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Requester</span>
-                  <span className="font-mono text-xs">{mockTask.requester.slice(0, 8)}...</span>
+            {/* Details */}
+            <div style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "12px" }}>DETAILS</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "13px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#64748b" }}>Requester</span>
+                  <span style={{ color: "#e2e8f0", fontSize: "11px" }}>{mockTask.requester.slice(0, 8)}...</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Assigned</span>
-                  <span className="font-mono text-xs">
-                    {mockTask.assignedAgent ? `${mockTask.assignedAgent.slice(0, 8)}...` : "—"}
-                  </span>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#64748b" }}>Assigned</span>
+                  <span style={{ color: "#e2e8f0", fontSize: "11px" }}>—</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Result CID</span>
-                  <span className="font-mono text-xs">{mockTask.resultCid || "—"}</span>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#64748b" }}>Result CID</span>
+                  <span style={{ color: "#e2e8f0", fontSize: "11px" }}>—</span>
                 </div>
               </div>
             </div>
 
-            {mockTask.subTasks.length > 0 && (
-              <div className="bg-surface border border-border rounded-lg p-4">
-                <div className="text-xs text-gray-500 font-mono mb-3">SUB-TASK CHAIN</div>
-                <div className="space-y-2">
-                  {mockTask.subTasks.map((st) => (
-                    <div key={st.taskId} className="flex items-center justify-between text-sm border-b border-border pb-2 last:border-0">
+            {/* Sub-task Chain */}
+            <div style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "12px" }}>SUB-TASK CHAIN</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+                {mockTask.subTasks.map((st, i) => (
+                  <div key={st.taskId}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: i < mockTask.subTasks.length - 1 ? "1px solid #1e1e2e" : "none" }}>
                       <div>
-                        <div className="font-mono text-xs text-gray-500">{st.taskId}</div>
-                        <div className="text-gray-300">{st.description}</div>
+                        <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "2px" }}>{st.taskId}</div>
+                        <div style={{ fontSize: "13px", color: "#e2e8f0" }}>{st.description}</div>
+                        {st.agent && <div style={{ fontSize: "10px", color: "#00ff87", marginTop: "2px" }}>{st.agent}</div>}
                       </div>
-                      <span className={`text-xs font-mono ${
-                        st.status === "Open" ? "text-primary" :
-                        st.status === "InProgress" ? "text-yellow-400" : "text-accent"
-                      }`}>
-                        {st.status}
+                      <span style={{
+                        fontSize: "10px",
+                        fontWeight: "bold",
+                        padding: "3px 8px",
+                        borderRadius: "4px",
+                        background: st.status === "Open" ? "rgba(0,255,135,0.1)" : "rgba(234,179,8,0.1)",
+                        color: st.status === "Open" ? "#00ff87" : "#eab308",
+                        border: `1px solid ${st.status === "Open" ? "rgba(0,255,135,0.3)" : "rgba(234,179,8,0.3)"}`,
+                      }}>
+                        {st.status.toUpperCase()}
                       </span>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </div>
 
           {/* Right: Actions */}
-          <div className="space-y-4">
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {mockTask.status === "Open" && (
-              <div className="bg-surface border border-border rounded-lg p-4">
-                <div className="text-xs text-gray-500 font-mono mb-3">PLACE BID</div>
-                <div className="space-y-3">
+              <div style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+                <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "12px" }}>PLACE BID</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   <input
                     type="text"
-                    placeholder="Bid amount (lamports)"
-                    className="w-full bg-bg border border-border rounded px-3 py-2 text-sm font-mono text-gray-200 placeholder:text-gray-600 focus:outline-none focus:border-primary"
+                    placeholder="Bid amount (SOL)"
+                    style={{ background: "#0a0a0f", border: "1px solid #1e1e2e", borderRadius: "6px", padding: "10px 12px", fontSize: "13px", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace", outline: "none" }}
                   />
                   <input
                     type="text"
                     placeholder="Capabilities hash (IPFS CID)"
-                    className="w-full bg-bg border border-border rounded px-3 py-2 text-sm font-mono text-gray-200 placeholder:text-gray-600 focus:outline-none focus:border-primary"
+                    style={{ background: "#0a0a0f", border: "1px solid #1e1e2e", borderRadius: "6px", padding: "10px 12px", fontSize: "13px", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace", outline: "none" }}
                   />
-                  <button className="w-full py-2 bg-primary text-bg font-mono font-bold text-sm rounded hover:bg-primary/90">
+                  <button style={{ padding: "10px", background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", borderRadius: "6px", border: "none", cursor: "pointer", fontSize: "13px", fontFamily: "'JetBrains Mono', monospace" }}>
                     Submit Bid
                   </button>
                 </div>
               </div>
             )}
 
-            <div className="bg-surface border border-border rounded-lg p-4">
-              <div className="text-xs text-gray-500 font-mono mb-3">LIVE DATA</div>
-              <div className="text-xs text-gray-400 font-mono">
+            <div style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "12px" }}>LIVE DATA</div>
+              <div style={{ fontSize: "12px", color: "#94a3b8", lineHeight: "1.5" }}>
                 Connect to Solana devnet to load real task data via Anchor.
               </div>
             </div>

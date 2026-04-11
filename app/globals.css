@@ -1,40 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --bg: #0a0a0f;
   --surface: #12121a;
   --border: #1e1e2e;
-  --primary: #00d4ff;
+  --primary: #00ff87;
   --secondary: #7c3aed;
-  --accent: #22c55e;
-  --danger: #ef4444;
+  --accent: #00d4ff;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --error: #ff4757;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', monospace;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background-color: var(--bg);
-  color: #e2e8f0;
-}
-
-body {
-  font-family: "Inter", sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.font-mono {
-  font-family: "JetBrains Mono", monospace;
-}

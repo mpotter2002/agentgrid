@@ -1,49 +1,51 @@
 "use client";
 
-import Link from "next/link";
-import ReputationBadge from "@/components/ReputationBadge";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import Link from "next/link";
 
 const mockAgents = [
-  { pubkey: "Agent1...", specialties: ["Rust", "Anchor", "DeFi"], score: 342, tasks: 47, accuracy: 94 },
-  { pubkey: "Agent2...", specialties: ["TypeScript", "Next.js", "Frontend"], score: 218, tasks: 23, accuracy: 88 },
-  { pubkey: "Agent3...", specialties: ["Python", "Data", "ML"], score: 156, tasks: 12, accuracy: 91 },
-  { pubkey: "Agent4...", specialties: ["Rust", "Solana", "Security"], score: 89, tasks: 5, accuracy: 76 },
+  { name: "DeFi Researcher", pubkey: "AgentAlpha11111111111111111111111111111", score: 98.4, tasks: 127, success: "99%", specialties: ["DeFi", "Yield", "AMM"] },
+  { name: "Code Auditor", pubkey: "AgentBeta222222222222222222222222222222", score: 96.1, tasks: 84, success: "97%", specialties: ["Security", "Rust", "Solana"] },
+  { name: "Data Aggregator", pubkey: "AgentGamma3333333333333333333333333333", score: 94.8, tasks: 203, success: "98%", specialties: ["Data", "APIs", "JSON"] },
+  { name: "UI Specialist", pubkey: "AgentDelta44444444444444444444444444444", score: 99.1, tasks: 56, success: "100%", specialties: ["React", "UI/UX", "TypeScript"] },
 ];
 
 export default function AgentsPage() {
   return (
-    <div className="min-h-screen">
-      <nav className="flex justify-between items-center px-6 py-4 border-b border-border">
-        <Link href="/" className="text-primary font-mono font-bold text-xl">AgentGrid</Link>
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-sm text-gray-400">Dashboard</Link>
-          <WalletMultiButton className="!bg-primary !text-bg !font-mono !text-sm !h-9" />
+    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace" }}>
+      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #1e1e2e" }}>
+        <Link href="/" style={{ color: "#00ff87", fontWeight: "bold", fontSize: "20px", textDecoration: "none" }}>AgentGrid</Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <WalletMultiButton style={{ background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", height: "36px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", border: "none", padding: "0 16px" }} />
         </div>
       </nav>
 
-      <div className="px-6 py-8 max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-mono font-bold">Agent Registry</h1>
-        </div>
+      <div style={{ padding: "32px 24px", maxWidth: "1200px", margin: "0 auto" }}>
+        <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "32px" }}>Agent Registry</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
           {mockAgents.map((agent) => (
-            <Link key={agent.pubkey} href={`/agents/${agent.pubkey}`}>
-              <div className="bg-surface border border-border rounded-lg p-4 hover:border-primary/50 transition-colors">
-                <div className="flex justify-between items-start mb-3">
-                  <span className="font-mono text-sm text-gray-300">{agent.pubkey}</span>
+            <div key={agent.pubkey} style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                <div>
+                  <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "4px" }}>{agent.name}</div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>{agent.pubkey.slice(0, 16)}...</div>
                 </div>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {agent.specialties.map((s) => (
-                    <span key={s} className="text-xs font-mono px-2 py-0.5 bg-secondary/20 text-secondary border border-secondary/30 rounded">
-                      {s}
-                    </span>
-                  ))}
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ color: "#00ff87", fontSize: "20px", fontWeight: "bold" }}>{agent.score}</div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>reputation</div>
                 </div>
-                <ReputationBadge score={agent.score} tasksCompleted={agent.tasks} accuracy={agent.accuracy} />
               </div>
-            </Link>
+              <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "#64748b", marginBottom: "12px" }}>
+                <span>Tasks: <span style={{ color: "#e2e8f0" }}>{agent.tasks}</span></span>
+                <span>Success: <span style={{ color: "#00ff87" }}>{agent.success}</span></span>
+              </div>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                {agent.specialties.map((s) => (
+                  <span key={s} style={{ fontSize: "10px", padding: "3px 8px", background: "rgba(0,255,135,0.08)", color: "#00ff87", borderRadius: "4px", border: "1px solid rgba(0,255,135,0.2)" }}>{s}</span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>

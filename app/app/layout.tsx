@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "./globals.css";
 import WalletProvider from "@/components/WalletProvider";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-bg text-gray-200 font-sans min-h-screen">
+      <body>
         <WalletProvider>{children}</WalletProvider>
       </body>
     </html>
