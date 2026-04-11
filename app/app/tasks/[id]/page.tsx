@@ -13,7 +13,7 @@ const mockTask = {
   stakeAmount: 1_000_000_000,
   escrowStatus: "Active" as const,
   requester: "7xKXTGbD8KtC2ewdHUGQAKt4mWTF7JhPgJEpuS8q7qKt",
-  assignedAgent: null,
+  assignedAgent: null as string | null,
   resultCid: null,
   parentTaskId: null,
   subTasks: [

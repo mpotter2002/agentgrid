@@ -1,6 +1,6 @@
 "use client";
 
-import { useWallet, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
 
 export default function Home() {

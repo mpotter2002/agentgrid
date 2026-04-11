@@ -1,11 +1,10 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { Program, AnchorProvider } from "@coral-xyz/anchor";
-import { AgentGrid, TaskEscrow, ReputationChain } from "./types";
+import { Program, AnchorProvider, Idl } from "@coral-xyz/anchor";
 
 const PROGRAM_IDS = {
   agentGrid: new PublicKey("AGENTGRID11111111111111111111111111111111"),
   taskEscrow: new PublicKey("ESCROW111111111111111111111111111111111111"),
-  reputationChain: new PublicKey("REPCHAIN111111111111111111111111111111111"),
+  reputationChain: new PublicKey("REPCHAIN111111111111111111111111111111111111"),
 };
 
 export const connection = new Connection(
@@ -13,8 +12,14 @@ export const connection = new Connection(
   "confirmed"
 );
 
-export function getProgram<T>(idl: any, programId: PublicKey, wallet: any, provider: AnchorProvider): Program<T> {
-  return new Program<T>(idl as any, programId, provider) as Program<T>;
+export function getProgram<T extends Idl>(
+  idl: T,
+  programId: PublicKey,
+  _wallet: any,
+  provider: AnchorProvider
+): Program<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return new Program(idl as any, { programId, provider } as any) as Program<T>;
 }
 
 export { PROGRAM_IDS };
