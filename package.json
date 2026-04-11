@@ -1,0 +1,19 @@
+{
+  "name": "agentgrid",
+  "version": "0.1.0",
+  "description": "Recursive AI agent subcontracting protocol on Solana",
+  "scripts": {
+    "test": "anchor test",
+    "build": "anchor build",
+    "deploy": "anchor deploy",
+    "start": "anchor run start"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "^0.30.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.90.0"
+  }
+}

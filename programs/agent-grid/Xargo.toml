@@ -1,0 +1,7 @@
+[target.bpfel-unknown-unknown.dependencies.std]
+features = []
+
+[profile.release]
+codegen-units = 1
+opt-level = "s"
+lto = true
