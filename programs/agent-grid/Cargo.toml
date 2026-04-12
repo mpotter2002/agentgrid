@@ -3,6 +3,9 @@ name = "agent-grid"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "lib"]
+
 [dependencies]
 anchor-lang = { version = "0.30.0", features = ["init-if-needed"] }
 solana-program = "1.18"
