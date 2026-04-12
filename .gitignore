@@ -10,4 +10,4 @@ dist/
 build/
 *.log
 deploy-wallet.json
-*/keypair.json
+**/keypair.json
