@@ -38,11 +38,9 @@ export default function DashboardPage() {
             <SheetTrigger className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none">
               <Menu className="w-5 h-5" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-72 bg-slate-900 border-slate-800 p-0">
-              <div className="flex flex-col gap-1 p-4">
-                <div className="mb-4 pb-4 border-b border-slate-800">
-                  <span className="font-bold text-lg text-white">Menu</span>
-                </div>
+            <SheetContent side="top" className="w-full bg-slate-900 border-b border-slate-800 rounded-b-xl p-0">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-4 p-4">
+                <span className="font-bold text-base text-white mb-2 sm:mb-0">Menu</span>
                 {[
                   { href: "/", label: "Home" },
                   { href: "/tasks", label: "Tasks" },
@@ -51,7 +49,7 @@ export default function DashboardPage() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                    className="px-3 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-md transition-colors w-full sm:w-auto"
                   >
                     {link.label}
                   </Link>
