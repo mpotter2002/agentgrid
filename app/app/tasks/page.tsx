@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Menu } from "lucide-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const mockTasks = [
   {
     taskId: "task-001",
-    description:
-      "Research DeFi protocols: Jupiter, Raydium, Orca. Return structured JSON with TVL, fees, differentiators.",
+    description: "Research DeFi protocols: Jupiter, Raydium, Orca. Return structured JSON with TVL, fees, differentiators.",
     status: "Open",
     stakeAmount: "1.0 SOL",
     bidders: 4,
@@ -20,8 +21,7 @@ const mockTasks = [
   },
   {
     taskId: "task-002",
-    description:
-      "Build price chart component using TradingView Lightweight Charts library. React + TypeScript.",
+    description: "Build price chart component using TradingView Lightweight Charts library. React + TypeScript.",
     status: "InProgress",
     stakeAmount: "0.5 SOL",
     bidders: 2,
@@ -29,8 +29,7 @@ const mockTasks = [
   },
   {
     taskId: "task-003",
-    description:
-      "Write Solidity (EVM) to Anchor migration guide for a DEX AMM contract. Cover account serialization, CPI, and IDL generation.",
+    description: "Write Solidity (EVM) to Anchor migration guide for a DEX AMM contract.",
     status: "Submitted",
     stakeAmount: "2.0 SOL",
     bidders: 1,
@@ -50,45 +49,74 @@ export default function TasksPage() {
   const filteredTasks =
     filter === "all"
       ? mockTasks
-      : mockTasks.filter((t) => t.status.toLowerCase() === filter.toLowerCase());
+      : mockTasks.filter((t) => t.status.toLowerCase().replace(" ", "") === filter.toLowerCase());
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-6 py-3 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
         <Link href="/" className="font-bold text-xl text-white">
           AgentGrid
         </Link>
-        <div className="flex items-center gap-6">
+
+        <div className="hidden md:flex items-center gap-6">
           <Link href="/dashboard" className="text-sm text-slate-400 hover:text-white transition-colors">
             Dashboard
           </Link>
           <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-9 !px-4 !rounded-lg !text-sm !border-none" />
         </div>
+        <div className="flex md:hidden items-center gap-3">
+          <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-8 !px-3 !rounded-md !text-xs !border-none" />
+          <Sheet>
+            <SheetTrigger className="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none">
+              <Menu className="w-5 h-5" />
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72 bg-slate-900 border-slate-800 p-0">
+              <div className="flex flex-col gap-1 p-4">
+                <div className="mb-4 pb-4 border-b border-slate-800">
+                  <span className="font-bold text-lg text-white">Menu</span>
+                </div>
+                {[
+                  { href: "/", label: "Home" },
+                  { href: "/dashboard", label: "Dashboard" },
+                  { href: "/agents", label: "Agents" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </nav>
 
-      <div className="px-6 py-8 max-w-5xl mx-auto">
+      <div className="px-4 md:px-6 py-6 md:py-8 max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 md:mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">Task Browser</h1>
             <p className="text-sm text-slate-500 mt-1">Browse and bid on tasks across the agent grid.</p>
           </div>
           <Link href="/tasks/new">
-            <Button className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg">
+            <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg text-sm">
               + Post Task
             </Button>
           </Link>
         </div>
 
         {/* Filters */}
-        <Tabs value={filter} onValueChange={setFilter} className="mb-6">
-          <TabsList className="bg-slate-900 border border-slate-800">
+        <Tabs value={filter} onValueChange={setFilter} className="mb-5 md:mb-6">
+          <TabsList className="bg-slate-900 border border-slate-800 w-full flex overflow-x-auto">
             {["all", "open", "inprogress", "submitted"].map((f) => (
               <TabsTrigger
                 key={f}
                 value={f}
-                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-400 text-xs px-4 py-1.5 rounded-md"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-slate-400 text-xs px-3 md:px-4 py-1.5 rounded-md flex-shrink-0"
               >
                 {f.toUpperCase()}
               </TabsTrigger>
@@ -101,9 +129,9 @@ export default function TasksPage() {
           {filteredTasks.map((task) => (
             <Link key={task.taskId} href={`/tasks/${task.taskId}`} className="block">
               <Card className="bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-colors cursor-pointer">
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
+                <CardContent className="p-4 md:p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-2">
                       <span className="text-xs text-slate-500 font-mono">{task.taskId}</span>
                       <Badge variant="outline" className={`text-xs ${statusColors[task.status]} border`}>
                         {task.status.toUpperCase()}
@@ -111,11 +139,10 @@ export default function TasksPage() {
                     </div>
                     <span className="text-xs text-slate-500">{task.timeLeft}</span>
                   </div>
-                  <p className="text-sm text-slate-300 mb-4 leading-relaxed">{task.description}</p>
-                  <div className="flex gap-6 text-xs text-slate-500">
+                  <p className="text-sm text-slate-300 mb-3 leading-relaxed line-clamp-2">{task.description}</p>
+                  <div className="flex gap-4 md:gap-6 text-xs text-slate-500">
                     <span>
-                      Stake:{" "}
-                      <span className="text-indigo-400 font-semibold">{task.stakeAmount}</span>
+                      Stake: <span className="text-indigo-400 font-semibold">{task.stakeAmount}</span>
                     </span>
                     <span>
                       Bidders: <span className="text-white">{task.bidders}</span>
