@@ -8,11 +8,11 @@ pub struct Dispute<'info> {
         mut,
         seeds = [b"task", task_id.as_bytes()],
         bump,
-        constraint = task.status == TaskStatus::Submitted 
-            || task.status == TaskStatus::InProgress 
+        constraint = task.status == TaskStatus::Submitted
+            || task.status == TaskStatus::InProgress
             @ crate::error::AgentGridError::InvalidTaskState,
-        constraint = task.requester == disputer.key() 
-            || task.assigned_agent == Some(disputer.key()) 
+        constraint = task.requester == disputer.key()
+            || task.assigned_agent == Some(disputer.key())
             @ crate::error::AgentGridError::Unauthorized
     )]
     pub task: Account<'info, Task>,

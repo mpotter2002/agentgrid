@@ -7,4 +7,7 @@ pub enum ReputationError {
 
     #[msg("Invalid outcome value (must be 0, 1, or 2)")]
     InvalidOutcome,
+
+    #[msg("Unauthorized — must be the agent to record own outcome")]
+    Unauthorized,
 }

@@ -39,4 +39,9 @@ pub mod task_escrow {
     pub fn refund_escrow(ctx: Context<RefundEscrow>, task_id: String) -> Result<()> {
         instructions::refund_escrow(ctx, task_id)
     }
+
+    /// Set the authorized resolver for an escrow (called via CPI from agent-grid).
+    pub fn set_resolver(ctx: Context<SetResolver>, task_id: String, resolver: Pubkey) -> Result<()> {
+        instructions::set_resolver(ctx, task_id, resolver)
+    }
 }

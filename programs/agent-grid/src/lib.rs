@@ -36,8 +36,8 @@ pub mod agent_grid {
     }
 
     /// Accept a bid and assign the task.
-    pub fn accept_bid(ctx: Context<AcceptBid>, task_id: String, bid_pk: Pubkey) -> Result<()> {
-        instructions::accept_bid(ctx, task_id, bid_pk)
+    pub fn accept_bid(ctx: Context<AcceptBid>, task_id: String, agent_key: Pubkey) -> Result<()> {
+        instructions::accept_bid(ctx, task_id, agent_key)
     }
 
     /// Agent submits completed work (IPFS CID of results).

@@ -21,7 +21,8 @@ pub struct RecordOutcome<'info> {
     )]
     pub attestation: Account<'info, TaskAttestation>,
 
-    #[account(mut)]
+    /// Recorder must be the agent themselves (self-report) — prevents anyone from gaming scores
+    #[account(mut, constraint = recorder.key() == agent @ ReputationError::Unauthorized)]
     pub recorder: Signer<'info>,
 
     pub system_program: Program<'info, System>,

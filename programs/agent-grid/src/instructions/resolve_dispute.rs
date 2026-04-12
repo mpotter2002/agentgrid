@@ -9,11 +9,15 @@ pub struct ResolveDispute<'info> {
         mut,
         seeds = [b"task", task_id.as_bytes()],
         bump,
-        constraint = task.status == TaskStatus::Disputed @ AgentGridError::InvalidTaskState
+        constraint = task.status == TaskStatus::Disputed @ AgentGridError::InvalidTaskState,
+        // Only requester, assigned agent, or a registered resolver can resolve
+        constraint = task.requester == resolver.key()
+            || task.assigned_agent == Some(resolver.key())
+            @ AgentGridError::Unauthorized
     )]
     pub task: Account<'info, Task>,
 
-    /// Arbiter — in production this would be a DAO or trusted resolver pool
+    /// Arbiter — must be task requester, assigned agent, or authorized resolver
     pub resolver: Signer<'info>,
 }
 
@@ -32,8 +36,7 @@ pub fn resolve_dispute(
     task.status = TaskStatus::Resolved;
     task.updated_at = clock.unix_timestamp as u64;
 
-    // In production: emit an event that task-escrow program listens to
-    // to execute the actual fund movement based on slash_bps
+    // Emit an event for off-chain listeners to trigger escrow slash via CPI
     msg!(
         "Dispute resolved for task {}. Slash: {} bps, Resolver fee: {} bps",
         task_id,

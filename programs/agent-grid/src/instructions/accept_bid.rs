@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use crate::state::{Task, TaskBid, TaskStatus};
 
 #[derive(Accounts)]
-#[instruction(task_id: String)]
+#[instruction(task_id: String, agent_key: Pubkey)]
 pub struct AcceptBid<'info> {
     #[account(
         mut,
@@ -15,25 +15,23 @@ pub struct AcceptBid<'info> {
 
     #[account(
         mut,
-        seeds = [b"bid", task_id.as_bytes(), accepted_bid.agent.as_ref()],
+        seeds = [b"bid", task_id.as_bytes(), agent_key.as_ref()],
         bump,
-        constraint = accepted_bid.task_id == task_id @ crate::error::AgentGridError::BidNotFound
+        constraint = accepted_bid.task_id == task_id @ crate::error::AgentGridError::BidNotFound,
+        constraint = accepted_bid.agent == agent_key @ crate::error::AgentGridError::BidNotFound
     )]
     pub accepted_bid: Account<'info, TaskBid>,
 
     #[account(mut)]
     pub requester: Signer<'info>,
-
-    /// The bid account to verify exists — we pass the Pubkey via the instruction
-    pub bid: Account<'info, TaskBid>,
 }
 
-pub fn accept_bid(ctx: Context<AcceptBid>, task_id: String, bid_pk: Pubkey) -> Result<()> {
+pub fn accept_bid(ctx: Context<AcceptBid>, task_id: String, agent_key: Pubkey) -> Result<()> {
     let task = &mut ctx.accounts.task;
     let clock = Clock::get()?;
 
     // The accepted bid's agent becomes the assigned agent
-    task.assigned_agent = Some(ctx.accounts.bid.agent);
+    task.assigned_agent = Some(ctx.accounts.accepted_bid.agent);
     task.status = TaskStatus::InProgress;
     task.updated_at = clock.unix_timestamp as u64;
 
