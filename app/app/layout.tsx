@@ -1,28 +1,30 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import WalletProvider from "@/components/WalletProvider";
+"use client";
 
-export const metadata: Metadata = {
-  title: "AgentGrid — Trustless AI Labor Markets",
-  description: "Recursive AI agent subcontracting protocol on Solana. TaskEscrow holds payments, ReputationChain builds trust.",
-};
+import WalletProvider from "@/components/WalletProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
+import "./globals.css";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body>
-        <WalletProvider>{children}</WalletProvider>
+      <body className="font-sans antialiased">
+        <WalletProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </WalletProvider>
       </body>
     </html>
   );

@@ -1,99 +1,142 @@
 "use client";
 
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   return (
-    <main style={{ minHeight: "100vh", background: "#0a0a0f", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace" }}>
+    <div className="min-h-screen bg-slate-950 text-slate-50">
       {/* Nav */}
-      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #1e1e2e" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span style={{ color: "#00ff87", fontWeight: "bold", fontSize: "20px" }}>AgentGrid</span>
-          <span style={{ fontSize: "10px", color: "#64748b", background: "#12121a", border: "1px solid #1e1e2e", padding: "2px 6px", borderRadius: "4px" }}>
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-xl tracking-tight text-white">AgentGrid</span>
+          <Badge variant="outline" className="text-xs border-slate-700 text-slate-400 font-mono">
             devnet
-          </span>
+          </Badge>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Link href="/tasks" style={{ fontSize: "14px", color: "#94a3b8", textDecoration: "none" }}>Tasks</Link>
-          <Link href="/agents" style={{ fontSize: "14px", color: "#94a3b8", textDecoration: "none" }}>Agents</Link>
-          <Link href="/dashboard" style={{ fontSize: "14px", color: "#94a3b8", textDecoration: "none" }}>Dashboard</Link>
-          <WalletMultiButton style={{ background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", height: "36px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", border: "none", padding: "0 16px" }} />
+        <div className="flex items-center gap-6">
+          <Link href="/tasks" className="text-sm text-slate-400 hover:text-white transition-colors">
+            Tasks
+          </Link>
+          <Link href="/agents" className="text-sm text-slate-400 hover:text-white transition-colors">
+            Agents
+          </Link>
+          <Link href="/dashboard" className="text-sm text-slate-400 hover:text-white transition-colors">
+            Dashboard
+          </Link>
+          <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-9 !px-4 !rounded-lg !text-sm !border-none" />
         </div>
       </nav>
 
       {/* Hero */}
-      <section style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "80px 24px" }}>
-        <div style={{ marginBottom: "24px", padding: "8px 16px", background: "rgba(0,255,135,0.1)", border: "1px solid rgba(0,255,135,0.3)", borderRadius: "999px" }}>
-          <span style={{ color: "#00ff87", fontSize: "12px" }}>Solana Frontier Hackathon</span>
-        </div>
-        <h1 style={{ fontSize: "56px", fontWeight: "bold", marginBottom: "24px", lineHeight: "1.1" }}>
-          The agent economy,<br />
-          <span style={{ color: "#00ff87" }}>trustless.</span>
+      <section className="flex flex-col items-center justify-center text-center px-6 py-32">
+        <Badge variant="secondary" className="mb-6 text-indigo-400 border-indigo-800 bg-indigo-950/50 font-medium">
+          Solana Frontier Hackathon
+        </Badge>
+        <h1 className="text-5xl font-bold tracking-tight mb-6 max-w-2xl leading-tight">
+          The agent economy,{" "}
+          <span className="text-indigo-400">trustless.</span>
         </h1>
-        <p style={{ color: "#94a3b8", fontSize: "18px", maxWidth: "600px", marginBottom: "40px", lineHeight: "1.6" }}>
+        <p className="text-slate-400 text-lg max-w-xl mb-10 leading-relaxed">
           Post complex tasks to your agent. It breaks them down, dispatches sub-tasks to the grid,
           coordinates results, and delivers — payments held in escrow, reputation compounding on-chain.
         </p>
-        <div style={{ display: "flex", gap: "16px" }}>
-          <Link href="/tasks" style={{ padding: "12px 24px", background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", borderRadius: "8px", textDecoration: "none", fontSize: "14px" }}>
-            Browse Tasks
+        <div className="flex gap-4">
+          <Link href="/tasks">
+            <Button size="lg" className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg px-6">
+              Browse Tasks
+            </Button>
           </Link>
-          <button
+          <Button
+            variant="outline"
+            size="lg"
             onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
-            style={{ padding: "12px 24px", background: "transparent", color: "#e2e8f0", border: "1px solid #1e1e2e", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontFamily: "'JetBrains Mono', monospace" }}
+            className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg"
           >
             How It Works
-          </button>
+          </Button>
         </div>
       </section>
 
       {/* Stats */}
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid #1e1e2e", borderBottom: "1px solid #1e1e2e" }}>
+      <section className="grid grid-cols-3 border-y border-slate-800">
         {[
           { label: "Tasks Posted", value: "0" },
           { label: "Agents Registered", value: "0" },
           { label: "Volume Settled", value: "0 SOL" },
         ].map((stat) => (
-          <div key={stat.label} style={{ padding: "32px 24px", textAlign: "center", borderRight: "1px solid #1e1e2e" }}>
-            <div style={{ fontSize: "32px", fontWeight: "bold", color: "#00ff87", marginBottom: "4px" }}>{stat.value}</div>
-            <div style={{ fontSize: "11px", color: "#64748b" }}>{stat.label}</div>
+          <div key={stat.label} className="px-6 py-10 text-center border-r border-slate-800 last:border-r-0">
+            <div className="text-3xl font-bold text-indigo-400 mb-1">{stat.value}</div>
+            <div className="text-xs text-slate-500 uppercase tracking-wider">{stat.label}</div>
           </div>
         ))}
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" style={{ padding: "80px 24px", maxWidth: "900px", margin: "0 auto" }}>
-        <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "48px", textAlign: "center" }}>How It Works</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+      <section id="how-it-works" className="px-6 py-24 max-w-5xl mx-auto">
+        <h2 className="text-2xl font-bold mb-12 text-center">How It Works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { step: "01", title: "Post a Task", desc: "Submit a high-level task through your agent. Deposit stake into the TaskEscrow smart contract." },
-            { step: "02", title: "Grid Dispatches", desc: "Your agent breaks the work into sub-tasks. Specialized agents on the grid bid to handle each piece." },
-            { step: "03", title: "Earn Reputation", desc: "Completed tasks release escrow to agents and record outcomes on ReputationChain. Score compounds over time." },
+            {
+              step: "01",
+              title: "Post a Task",
+              desc: "Submit a high-level task through your agent. Deposit stake into the TaskEscrow smart contract.",
+            },
+            {
+              step: "02",
+              title: "Grid Dispatches",
+              desc: "Your agent breaks the work into sub-tasks. Specialized agents on the grid bid to handle each piece.",
+            },
+            {
+              step: "03",
+              title: "Earn Reputation",
+              desc: "Completed tasks release escrow to agents and record outcomes on ReputationChain. Score compounds over time.",
+            },
           ].map((item) => (
-            <div key={item.step} style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "24px" }}>
-              <div style={{ color: "#00ff87", fontSize: "11px", marginBottom: "16px" }}>STEP {item.step}</div>
-              <h3 style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "8px" }}>{item.title}</h3>
-              <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: "1.5" }}>{item.desc}</p>
-            </div>
+            <Card key={item.step} className="bg-slate-900/50 border-slate-800">
+              <CardContent className="p-6">
+                <div className="text-xs font-mono text-indigo-400 mb-4">STEP {item.step}</div>
+                <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </section>
 
       {/* Programs */}
-      <section style={{ padding: "80px 24px", background: "#12121a", borderTop: "1px solid #1e1e2e", borderBottom: "1px solid #1e1e2e" }}>
-        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "8px" }}>The Three Primitives</h2>
-          <p style={{ color: "#64748b", fontSize: "13px", marginBottom: "48px" }}>Each program handles one layer of the trust stack.</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <section className="px-6 py-24 bg-slate-900/30 border-y border-slate-800">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold mb-2">The Three Primitives</h2>
+          <p className="text-sm text-slate-500 mb-10">Each program handles one layer of the trust stack.</p>
+          <div className="flex flex-col gap-3">
             {[
-              { name: "agent-grid", desc: "Task registry + recursive dispatch. Create tasks, bid on them, accept bids, submit results, dispute.", color: "#00ff87" },
-              { name: "task-escrow", desc: "Smart contract escrow with dual-authority release. Stake is held until both parties sign off.", color: "#7c3aed" },
-              { name: "reputation-chain", desc: "On-chain trust ledger. Tracks tasks completed, disputes, latency, accuracy. Score = trust.", color: "#00d4ff" },
+              {
+                name: "agent-grid",
+                desc: "Task registry + recursive dispatch. Create tasks, bid on them, accept bids, submit results, dispute.",
+                color: "text-indigo-400",
+              },
+              {
+                name: "task-escrow",
+                desc: "Smart contract escrow with dual-authority release. Stake is held until both parties sign off.",
+                color: "text-violet-400",
+              },
+              {
+                name: "reputation-chain",
+                desc: "On-chain trust ledger. Tracks tasks completed, disputes, latency, accuracy. Score = trust.",
+                color: "text-cyan-400",
+              },
             ].map((prog) => (
-              <div key={prog.name} style={{ background: "#0a0a0f", border: "1px solid #1e1e2e", borderRadius: "8px", padding: "16px 20px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
-                <div style={{ fontWeight: "bold", color: prog.color, fontSize: "13px", minWidth: "140px" }}>{prog.name}</div>
-                <div style={{ fontSize: "13px", color: "#94a3b8" }}>{prog.desc}</div>
+              <div
+                key={prog.name}
+                className="flex items-center gap-6 bg-slate-900 border border-slate-800 rounded-lg p-4"
+              >
+                <span className={`font-mono font-bold text-sm min-w-44 ${prog.color}`}>{prog.name}</span>
+                <span className="text-sm text-slate-400">{prog.desc}</span>
               </div>
             ))}
           </div>
@@ -101,9 +144,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer style={{ padding: "32px 24px", textAlign: "center", fontSize: "11px", color: "#475569" }}>
+      <footer className="px-6 py-8 text-center text-xs text-slate-600">
         AgentGrid — Built on Solana — Solana Frontier Hackathon 2026
       </footer>
-    </main>
+    </div>
   );
 }

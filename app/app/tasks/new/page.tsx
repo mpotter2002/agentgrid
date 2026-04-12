@@ -1,9 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 export default function NewTaskPage() {
   const router = useRouter();
@@ -18,146 +24,129 @@ export default function NewTaskPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // TODO: Integrate with Anchor program to create task on-chain
-    // For now, simulate submission
+    // TODO: Integrate with Anchor program
     await new Promise((resolve) => setTimeout(resolve, 1000));
     router.push("/tasks");
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace" }}>
-      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #1e1e2e" }}>
-        <Link href="/" style={{ color: "#00ff87", fontWeight: "bold", fontSize: "20px", textDecoration: "none" }}>AgentGrid</Link>
-        <WalletMultiButton style={{ background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", height: "36px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", border: "none", padding: "0 16px" }} />
+    <div className="min-h-screen bg-slate-950 text-slate-50">
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <Link href="/" className="font-bold text-xl text-white">
+          AgentGrid
+        </Link>
+        <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-9 !px-4 !rounded-lg !text-sm !border-none" />
       </nav>
 
-      <div style={{ padding: "32px 24px", maxWidth: "640px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "32px" }}>
-          <Link href="/tasks" style={{ fontSize: "13px", color: "#64748b", textDecoration: "none" }}>← Back to Tasks</Link>
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginTop: "8px" }}>Post a New Task</h1>
-          <p style={{ fontSize: "13px", color: "#64748b", marginTop: "4px" }}>Break down complex work and dispatch it to the agent grid.</p>
+      <div className="px-6 py-8 max-w-2xl mx-auto">
+        <div className="mb-8">
+          <Link href="/tasks" className="text-sm text-slate-500 hover:text-white transition-colors">
+            ← Back to Tasks
+          </Link>
+          <h1 className="text-2xl font-bold text-white mt-2">Post a New Task</h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Break down complex work and dispatch it to the agent grid.
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <div>
-            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>Task Description</label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe the task in detail. Be specific about inputs, expected outputs, and any constraints..."
-              required
-              rows={5}
-              style={{
-                width: "100%",
-                background: "#12121a",
-                border: "1px solid #1e1e2e",
-                borderRadius: "8px",
-                padding: "12px",
-                color: "#e2e8f0",
-                fontSize: "13px",
-                fontFamily: "'JetBrains Mono', monospace",
-                resize: "vertical",
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              {/* Description */}
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="description" className="text-slate-300 text-sm">
+                  Task Description
+                </Label>
+                <Textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Describe the task in detail. Be specific about inputs, expected outputs, and any constraints..."
+                  required
+                  rows={5}
+                  className="bg-slate-950 border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500/20 resize-none"
+                />
+              </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            <div>
-              <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>Stake Amount (SOL)</label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                value={formData.stakeAmount}
-                onChange={(e) => setFormData({ ...formData, stakeAmount: e.target.value })}
-                placeholder="1.0"
-                required
-                style={{
-                  width: "100%",
-                  background: "#12121a",
-                  border: "1px solid #1e1e2e",
-                  borderRadius: "8px",
-                  padding: "10px 12px",
-                  color: "#e2e8f0",
-                  fontSize: "13px",
-                  fontFamily: "'JetBrains Mono', monospace",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>Deadline (blocks)</label>
-              <input
-                type="number"
-                min="1"
-                value={formData.deadlineBlocks}
-                onChange={(e) => setFormData({ ...formData, deadlineBlocks: e.target.value })}
-                placeholder="1000"
-                style={{
-                  width: "100%",
-                  background: "#12121a",
-                  border: "1px solid #1e1e2e",
-                  borderRadius: "8px",
-                  padding: "10px 12px",
-                  color: "#e2e8f0",
-                  fontSize: "13px",
-                  fontFamily: "'JetBrains Mono', monospace",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-          </div>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Stake Amount */}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="stakeAmount" className="text-slate-300 text-sm">
+                    Stake Amount (SOL)
+                  </Label>
+                  <Input
+                    id="stakeAmount"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={formData.stakeAmount}
+                    onChange={(e) => setFormData({ ...formData, stakeAmount: e.target.value })}
+                    placeholder="1.0"
+                    required
+                    className="bg-slate-950 border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500/20"
+                  />
+                </div>
 
-          <div>
-            <label style={{ display: "block", fontSize: "12px", color: "#94a3b8", marginBottom: "6px" }}>Parent Task ID (optional — for recursive sub-tasks)</label>
-            <input
-              type="text"
-              value={formData.parentTaskId}
-              onChange={(e) => setFormData({ ...formData, parentTaskId: e.target.value })}
-              placeholder="task-001"
-              style={{
-                width: "100%",
-                background: "#12121a",
-                border: "1px solid #1e1e2e",
-                borderRadius: "8px",
-                padding: "10px 12px",
-                color: "#e2e8f0",
-                fontSize: "13px",
-                fontFamily: "'JetBrains Mono', monospace",
-                boxSizing: "border-box",
-              }}
-            />
-          </div>
+                {/* Deadline */}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="deadlineBlocks" className="text-slate-300 text-sm">
+                    Deadline (blocks)
+                  </Label>
+                  <Input
+                    id="deadlineBlocks"
+                    type="number"
+                    min="1"
+                    value={formData.deadlineBlocks}
+                    onChange={(e) => setFormData({ ...formData, deadlineBlocks: e.target.value })}
+                    placeholder="1000"
+                    className="bg-slate-950 border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500/20"
+                  />
+                </div>
+              </div>
 
-          <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
-            <Link
-              href="/tasks"
-              style={{ padding: "12px 24px", background: "transparent", color: "#94a3b8", border: "1px solid #1e1e2e", borderRadius: "8px", textDecoration: "none", fontSize: "13px" }}
-            >
-              Cancel
-            </Link>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              style={{
-                flex: 1,
-                padding: "12px 24px",
-                background: isSubmitting ? "rgba(0,255,135,0.5)" : "#00ff87",
-                color: "#0a0a0f",
-                fontWeight: "bold",
-                borderRadius: "8px",
-                border: "none",
-                fontSize: "13px",
-                cursor: isSubmitting ? "not-allowed" : "pointer",
-                fontFamily: "'JetBrains Mono', monospace",
-              }}
-            >
-              {isSubmitting ? "Posting..." : "Post Task"}
-            </button>
-          </div>
-        </form>
+              {/* Parent Task ID */}
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="parentTaskId" className="text-slate-300 text-sm">
+                  Parent Task ID <span className="text-slate-600">(optional)</span>
+                </Label>
+                <Input
+                  id="parentTaskId"
+                  type="text"
+                  value={formData.parentTaskId}
+                  onChange={(e) => setFormData({ ...formData, parentTaskId: e.target.value })}
+                  placeholder="task-001"
+                  className="bg-slate-950 border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500/20"
+                />
+                <p className="text-xs text-slate-600">
+                  Set a parent task ID for recursive sub-task dispatch.
+                </p>
+              </div>
+
+              <Separator className="bg-slate-800" />
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <Link href="/tasks" className="flex-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg disabled:opacity-50"
+                >
+                  {isSubmitting ? "Posting..." : "Post Task"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

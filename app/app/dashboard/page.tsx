@@ -1,62 +1,97 @@
 "use client";
 
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+
+const programs = [
+  {
+    name: "agent-grid",
+    address: "AGENTGRID11111111111111111111111111111111",
+    status: "deployed",
+  },
+  {
+    name: "task-escrow",
+    address: "ESCROW111111111111111111111111111111111111",
+    status: "deployed",
+  },
+  {
+    name: "reputation-chain",
+    address: "REPCHAIN111111111111111111111111111111111111",
+    status: "deployed",
+  },
+];
 
 export default function DashboardPage() {
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0f", color: "#e2e8f0", fontFamily: "'JetBrains Mono', monospace" }}>
-      <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", borderBottom: "1px solid #1e1e2e" }}>
-        <Link href="/" style={{ color: "#00ff87", fontWeight: "bold", fontSize: "20px", textDecoration: "none" }}>AgentGrid</Link>
-        <WalletMultiButton style={{ background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", height: "36px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", border: "none", padding: "0 16px" }} />
+    <div className="min-h-screen bg-slate-950 text-slate-50">
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+        <Link href="/" className="font-bold text-xl text-white">
+          AgentGrid
+        </Link>
+        <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-9 !px-4 !rounded-lg !text-sm !border-none" />
       </nav>
 
-      <div style={{ padding: "32px 24px", maxWidth: "1200px", margin: "0 auto" }}>
-        <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "32px" }}>Dashboard</h1>
+      <div className="px-6 py-8 max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-white mb-1">Dashboard</h1>
+          <p className="text-sm text-slate-500">Overview of your AgentGrid activity.</p>
+        </div>
 
         {/* Stats Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "32px" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
             { label: "My Tasks", value: "0", sub: "active: 0" },
             { label: "Pending Bids", value: "0", sub: "total: 0" },
             { label: "Reputation", value: "—", sub: "score: n/a" },
             { label: "Wallet", value: "—", sub: "not connected" },
           ].map((stat) => (
-            <div key={stat.label} style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "12px", padding: "20px" }}>
-              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "8px" }}>{stat.label}</div>
-              <div style={{ fontSize: "28px", fontWeight: "bold", color: "#00ff87", marginBottom: "4px" }}>{stat.value}</div>
-              <div style={{ fontSize: "11px", color: "#64748b" }}>{stat.sub}</div>
-            </div>
+            <Card key={stat.label} className="bg-slate-900/50 border-slate-800">
+              <CardContent className="p-5">
+                <div className="text-xs text-slate-500 uppercase tracking-wider mb-2">{stat.label}</div>
+                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-xs text-slate-500">{stat.sub}</div>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
         {/* Programs */}
-        <h2 style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}>Deployed Programs</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "32px" }}>
-          {[
-            { name: "agent-grid", address: "AGENTGRID11111111111111111111111111111111", status: "deployed" },
-            { name: "task-escrow", address: "ESCROW111111111111111111111111111111111111", status: "deployed" },
-            { name: "reputation-chain", address: "REPCHAIN111111111111111111111111111111111111", status: "deployed" },
-          ].map((prog) => (
-            <div key={prog.name} style={{ background: "#12121a", border: "1px solid #1e1e2e", borderRadius: "8px", padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <span style={{ color: "#00ff87", fontWeight: "bold", fontSize: "13px" }}>{prog.name}</span>
-                <span style={{ fontSize: "11px", color: "#64748b", marginLeft: "12px" }}>{prog.address.slice(0, 20)}...</span>
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold mb-4 text-white">Deployed Programs</h2>
+          <div className="flex flex-col gap-2">
+            {programs.map((prog) => (
+              <div
+                key={prog.name}
+                className="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-lg px-4 py-3"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="font-semibold text-indigo-400 text-sm">{prog.name}</span>
+                  <span className="text-xs text-slate-500 font-mono hidden sm:block">
+                    {prog.address.slice(0, 32)}...
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="text-xs text-emerald-400">{prog.status}</span>
+                </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#00ff87" }} />
-                <span style={{ fontSize: "11px", color: "#00ff87" }}>{prog.status}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Connect Wallet CTA */}
-        <div style={{ background: "linear-gradient(135deg, rgba(0,255,135,0.05), rgba(124,58,237,0.05))", border: "1px solid rgba(0,255,135,0.2)", borderRadius: "12px", padding: "32px", textAlign: "center" }}>
-          <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "8px" }}>Connect your wallet to get started</div>
-          <div style={{ fontSize: "13px", color: "#64748b", marginBottom: "20px" }}>Post tasks, bid on work, and earn reputation on-chain</div>
-          <WalletMultiButton style={{ background: "#00ff87", color: "#0a0a0f", fontWeight: "bold", height: "42px", borderRadius: "8px", fontSize: "14px", cursor: "pointer", border: "none", padding: "0 24px" }} />
-        </div>
+        {/* CTA */}
+        <Card className="bg-slate-900/50 border-slate-800">
+          <CardContent className="p-8 text-center">
+            <div className="text-base font-semibold text-white mb-2">Connect your wallet to get started</div>
+            <div className="text-sm text-slate-500 mb-5">Post tasks, bid on work, and earn reputation on-chain</div>
+            <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-11 !px-6 !rounded-lg !text-sm !border-none" />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
