@@ -32,6 +32,10 @@ pub fn post_bid(
     bid_amount: u64,
     capabilities_hash: String,
 ) -> Result<()> {
+    // String length validation
+    require!(task_id.len() <= 64, crate::error::AgentGridError::StringTooLong);
+    require!(capabilities_hash.len() <= 64, crate::error::AgentGridError::StringTooLong);
+
     let bid = &mut ctx.accounts.bid;
     let clock = Clock::get()?;
 

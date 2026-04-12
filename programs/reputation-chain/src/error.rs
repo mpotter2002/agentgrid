@@ -10,4 +10,7 @@ pub enum ReputationError {
 
     #[msg("Unauthorized — must be the agent to record own outcome")]
     Unauthorized,
+
+    #[msg("String exceeds maximum allowed length")]
+    StringTooLong,
 }

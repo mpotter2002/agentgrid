@@ -22,4 +22,7 @@ pub enum AgentGridError {
 
     #[msg("Resolver fee too high")]
     ResolverFeeTooHigh,
+
+    #[msg("String exceeds maximum allowed length")]
+    StringTooLong,
 }

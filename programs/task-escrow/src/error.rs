@@ -13,4 +13,7 @@ pub enum EscrowError {
 
     #[msg("Funds insufficient for slash amount")]
     InsufficientFunds,
+
+    #[msg("String exceeds maximum allowed length")]
+    StringTooLong,
 }

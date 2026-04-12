@@ -21,6 +21,9 @@ pub struct InitEscrow<'info> {
 }
 
 pub fn init_escrow(ctx: Context<InitEscrow>, task_id: String, amount: u64) -> Result<()> {
+    // String length validation
+    require!(task_id.len() <= 64, crate::error::EscrowError::StringTooLong);
+
     let escrow = &mut ctx.accounts.escrow;
     let clock = Clock::get()?;
     let benef = ctx.accounts.beneficiary.key();

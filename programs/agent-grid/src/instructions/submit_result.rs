@@ -18,6 +18,9 @@ pub struct SubmitResult<'info> {
 }
 
 pub fn submit_result(ctx: Context<SubmitResult>, task_id: String, result_cid: String) -> Result<()> {
+    // String length validation
+    require!(result_cid.len() <= 65, crate::error::AgentGridError::StringTooLong);
+
     let task = &mut ctx.accounts.task;
     let clock = Clock::get()?;
 

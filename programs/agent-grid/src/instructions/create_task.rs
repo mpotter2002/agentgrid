@@ -27,6 +27,13 @@ pub fn create_task(
     parent_task_id: Option<String>,
     deadline_blocks: Option<u64>,
 ) -> Result<()> {
+    // String length validation to prevent serialization failures
+    require!(task_id.len() <= 64, crate::error::AgentGridError::StringTooLong);
+    require!(description.len() <= 256, crate::error::AgentGridError::StringTooLong);
+    if let Some(ref pid) = parent_task_id {
+        require!(pid.len() <= 64, crate::error::AgentGridError::StringTooLong);
+    }
+
     let task = &mut ctx.accounts.task;
     let clock = Clock::get()?;
 

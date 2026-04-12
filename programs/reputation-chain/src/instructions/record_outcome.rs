@@ -36,6 +36,7 @@ pub fn record_outcome(
     latency_blocks: u64,
 ) -> Result<()> {
     require!(outcome <= 2, ReputationError::InvalidOutcome);
+    require!(task_id.len() <= 64, ReputationError::StringTooLong);
 
     let record = &mut ctx.accounts.record;
     let attestation = &mut ctx.accounts.attestation;
