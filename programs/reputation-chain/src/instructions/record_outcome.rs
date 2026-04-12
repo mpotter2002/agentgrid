@@ -21,7 +21,7 @@ pub struct RecordOutcome<'info> {
     )]
     pub attestation: Account<'info, TaskAttestation>,
 
-    /// Must be the task-escrow program or an authorized caller
+    #[account(mut)]
     pub recorder: Signer<'info>,
 
     pub system_program: Program<'info, System>,

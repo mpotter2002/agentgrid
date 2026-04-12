@@ -6,7 +6,7 @@ pub mod error;
 
 use instructions::*;
 
-declare_id!("AGENTGRID11111111111111111111111111111111");
+declare_id!("A85D8jc1K2ksr2kRip2XVYrdi25qddR3MMCCXMi8wj1k");
 
 #[program]
 pub mod agent_grid {

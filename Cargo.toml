@@ -1,0 +1,14 @@
+[workspace]
+members = [
+    "programs/agent-grid",
+    "programs/task-escrow",
+    "programs/reputation-chain",
+]
+resolver = "2"
+
+[profile.release]
+overflow-checks = true
+
+
+# proc-macro2 pinned via cargo update --precise
+

@@ -6,7 +6,7 @@ pub mod error;
 
 use instructions::*;
 
-declare_id!("REPCHAIN111111111111111111111111111111111");
+declare_id!("9fQZEEszAi9mixRX3NrCMVY6kdC6hkfNnijfMyhUXbFo");
 
 #[program]
 pub mod reputation_chain {

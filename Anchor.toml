@@ -1,25 +1,26 @@
-[features]
-resolution = "latest"
--provider = "localnet"
+[toolchain]
 
-[programs.localnet]
-agent_grid = "AGENTGRID11111111111111111111111111111111"
-task_escrow = "ESCROW111111111111111111111111111111111111"
-reputation_chain = "REPCHAIN111111111111111111111111111111111"
+[features]
+resolution = true
+skip-lint = false
 
 [programs.devnet]
-agent_grid = "AGENTGRID11111111111111111111111111111111"
-task_escrow = "ESCROW111111111111111111111111111111111111"
-reputation_chain = "REPCHAIN111111111111111111111111111111111"
+agent_grid = "A85D8jc1K2ksr2kRip2XVYrdi25qddR3MMCCXMi8wj1k"
+reputation_chain = "9fQZEEszAi9mixRX3NrCMVY6kdC6hkfNnijfMyhUXbFo"
+task_escrow = "8Exvze4gwdR1iLG8Azf7UH4g6YmB35krmf1rw9aDjaQQ"
 
-[registry]
-url = "https://api.apr.dev/v1"
+[programs.localnet]
+agent_grid = "D6QtepyhbxccbbHiLspEPYs5se7bPwznikDNDQdRNti"
+reputation_chain = "GasC46imEJKa8nm9FKYvQx8i35GYSsMdF2Ag1kqKeRsi"
+task_escrow = "58vuS5cVcddiYcvaANU6cu4UswpDATvKT3srkHADZKtq"
 
 [provider]
 cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "anchor test"
 build = "anchor build"
 deploy = "anchor deploy"
+test = "anchor test"
+
+[hooks]

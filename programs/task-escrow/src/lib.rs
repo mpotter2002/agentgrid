@@ -6,7 +6,7 @@ pub mod error;
 
 use instructions::*;
 
-declare_id!("ESCROW111111111111111111111111111111111111");
+declare_id!("8Exvze4gwdR1iLG8Azf7UH4g6YmB35krmf1rw9aDjaQQ");
 
 #[program]
 pub mod task_escrow {
