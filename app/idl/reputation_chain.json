@@ -1,0 +1,334 @@
+{
+  "address": "9fQZEEszAi9mixRX3NrCMVY6kdC6hkfNnijfMyhUXbFo",
+  "metadata": {
+    "name": "reputation_chain",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "get_score",
+      "docs": [
+        "Get the current reputation score for an agent (read-only, computed on-chain)."
+      ],
+      "discriminator": [
+        141,
+        61,
+        99,
+        196,
+        254,
+        116,
+        158,
+        115
+      ],
+      "accounts": [
+        {
+          "name": "record"
+        }
+      ],
+      "args": [],
+      "returns": {
+        "defined": {
+          "name": "ReputationScore"
+        }
+      }
+    },
+    {
+      "name": "init_agent",
+      "docs": [
+        "Register a new agent on the reputation chain."
+      ],
+      "discriminator": [
+        80,
+        124,
+        209,
+        4,
+        194,
+        195,
+        51,
+        49
+      ],
+      "accounts": [
+        {
+          "name": "record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  112
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "agent"
+              }
+            ]
+          }
+        },
+        {
+          "name": "agent",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "record_outcome",
+      "docs": [
+        "Record a task outcome — called by escrow program CPI when task resolves."
+      ],
+      "discriminator": [
+        130,
+        121,
+        6,
+        102,
+        151,
+        160,
+        252,
+        6
+      ],
+      "accounts": [
+        {
+          "name": "record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  112
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "agent"
+              }
+            ]
+          }
+        },
+        {
+          "name": "attestation",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  116,
+                  116,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "recorder",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "agent",
+          "type": "pubkey"
+        },
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "outcome",
+          "type": "u8"
+        },
+        {
+          "name": "latency_blocks",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AgentRecord",
+      "discriminator": [
+        4,
+        201,
+        129,
+        70,
+        197,
+        134,
+        47,
+        169
+      ]
+    },
+    {
+      "name": "TaskAttestation",
+      "discriminator": [
+        196,
+        186,
+        34,
+        122,
+        102,
+        130,
+        112,
+        30
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AgentNotFound",
+      "msg": "Agent record not initialized"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidOutcome",
+      "msg": "Invalid outcome value (must be 0, 1, or 2)"
+    }
+  ],
+  "types": [
+    {
+      "name": "AgentRecord",
+      "docs": [
+        "Tracks the reputation record for an agent.",
+        "PDA: [b\"rep\", agent_pubkey.as_ref()]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "tasks_completed",
+            "type": "u32"
+          },
+          {
+            "name": "tasks_disputed",
+            "type": "u32"
+          },
+          {
+            "name": "total_latency_blocks",
+            "type": "u64"
+          },
+          {
+            "name": "approvals_without_revision",
+            "type": "u32"
+          },
+          {
+            "name": "total_tasks_submitted",
+            "type": "u32"
+          },
+          {
+            "name": "total_volume_settled",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "updated_at",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReputationScore",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tasks_completed",
+            "type": "u32"
+          },
+          {
+            "name": "tasks_disputed",
+            "type": "u32"
+          },
+          {
+            "name": "avg_latency_blocks",
+            "type": "u64"
+          },
+          {
+            "name": "accuracy_score",
+            "type": "u8"
+          },
+          {
+            "name": "total_volume_settled",
+            "type": "u64"
+          },
+          {
+            "name": "composite_score",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TaskAttestation",
+      "docs": [
+        "PDA: [b\"attest\", task_id.as_bytes()]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "task_id",
+            "type": "string"
+          },
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "outcome",
+            "type": "u8"
+          },
+          {
+            "name": "latency_blocks",
+            "type": "u64"
+          },
+          {
+            "name": "recorded_at",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

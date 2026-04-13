@@ -1,0 +1,674 @@
+{
+  "address": "A85D8jc1K2ksr2kRip2XVYrdi25qddR3MMCCXMi8wj1k",
+  "metadata": {
+    "name": "agent_grid",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "accept_bid",
+      "docs": [
+        "Accept a bid and assign the task."
+      ],
+      "discriminator": [
+        196,
+        191,
+        1,
+        229,
+        144,
+        172,
+        122,
+        227
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "accepted_bid",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  105,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              },
+              {
+                "kind": "account",
+                "path": "accepted_bid.agent",
+                "account": "TaskBid"
+              }
+            ]
+          }
+        },
+        {
+          "name": "requester",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "bid",
+          "docs": [
+            "The bid account to verify exists — we pass the Pubkey via the instruction"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "bid_pk",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "approve_result",
+      "docs": [
+        "Requester approves the submitted result."
+      ],
+      "discriminator": [
+        98,
+        61,
+        175,
+        184,
+        93,
+        254,
+        61,
+        236
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "approver",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "create_task",
+      "docs": [
+        "Create a new task.",
+        "If `parent_task_id` is Some, this is a sub-task in a recursive chain."
+      ],
+      "discriminator": [
+        194,
+        80,
+        6,
+        180,
+        232,
+        127,
+        48,
+        171
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "requester",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "stake_amount",
+          "type": "u64"
+        },
+        {
+          "name": "parent_task_id",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "deadline_blocks",
+          "type": {
+            "option": "u64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "dispute",
+      "docs": [
+        "Either party raises a dispute."
+      ],
+      "discriminator": [
+        216,
+        92,
+        128,
+        146,
+        202,
+        85,
+        135,
+        73
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "disputer",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "reason",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "post_bid",
+      "docs": [
+        "Post a bid on an open task."
+      ],
+      "discriminator": [
+        2,
+        141,
+        102,
+        125,
+        123,
+        27,
+        205,
+        12
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bid",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  105,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              },
+              {
+                "kind": "account",
+                "path": "agent"
+              }
+            ]
+          }
+        },
+        {
+          "name": "agent",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "bid_amount",
+          "type": "u64"
+        },
+        {
+          "name": "capabilities_hash",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "resolve_dispute",
+      "docs": [
+        "Arbiter resolves a disputed task."
+      ],
+      "discriminator": [
+        231,
+        6,
+        202,
+        6,
+        96,
+        103,
+        12,
+        230
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "resolver",
+          "docs": [
+            "Arbiter — in production this would be a DAO or trusted resolver pool"
+          ],
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "slash_bps",
+          "type": "u16"
+        },
+        {
+          "name": "resolver_fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "submit_result",
+      "docs": [
+        "Agent submits completed work (IPFS CID of results)."
+      ],
+      "discriminator": [
+        240,
+        42,
+        89,
+        180,
+        10,
+        239,
+        9,
+        214
+      ],
+      "accounts": [
+        {
+          "name": "task",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  97,
+                  115,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "task_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "submitter",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "task_id",
+          "type": "string"
+        },
+        {
+          "name": "result_cid",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Task",
+      "discriminator": [
+        79,
+        34,
+        229,
+        55,
+        88,
+        90,
+        55,
+        84
+      ]
+    },
+    {
+      "name": "TaskBid",
+      "discriminator": [
+        173,
+        104,
+        90,
+        231,
+        189,
+        239,
+        133,
+        142
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidTaskState",
+      "msg": "Task is not in the correct state for this operation"
+    },
+    {
+      "code": 6001,
+      "name": "TaskNotFound",
+      "msg": "Task not found"
+    },
+    {
+      "code": 6002,
+      "name": "BidNotFound",
+      "msg": "Bid not found"
+    },
+    {
+      "code": 6003,
+      "name": "Unauthorized",
+      "msg": "Unauthorized access"
+    },
+    {
+      "code": 6004,
+      "name": "DeadlinePassed",
+      "msg": "Deadline has passed"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidSlashBps",
+      "msg": "Invalid slash basis points"
+    },
+    {
+      "code": 6006,
+      "name": "ResolverFeeTooHigh",
+      "msg": "Resolver fee too high"
+    }
+  ],
+  "types": [
+    {
+      "name": "Task",
+      "docs": [
+        "The main Task account.",
+        "PDA: [b\"task\", task_id.as_bytes()]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "task_id",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "requester",
+            "type": "pubkey"
+          },
+          {
+            "name": "assigned_agent",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "TaskStatus"
+              }
+            }
+          },
+          {
+            "name": "stake_amount",
+            "type": "u64"
+          },
+          {
+            "name": "result_cid",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "parent_task_id",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "deadline_blocks",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "updated_at",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TaskBid",
+      "docs": [
+        "A bid on a task.",
+        "PDA: [b\"bid\", task_id.as_bytes(), agent_pubkey.as_ref()]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "task_id",
+            "type": "string"
+          },
+          {
+            "name": "agent",
+            "type": "pubkey"
+          },
+          {
+            "name": "bid_amount",
+            "type": "u64"
+          },
+          {
+            "name": "capabilities_hash",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TaskStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Open"
+          },
+          {
+            "name": "InProgress"
+          },
+          {
+            "name": "Submitted"
+          },
+          {
+            "name": "Approved"
+          },
+          {
+            "name": "Disputed"
+          },
+          {
+            "name": "Resolved"
+          }
+        ]
+      }
+    }
+  ]
+}
