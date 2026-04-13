@@ -11,3 +11,4 @@ build/
 *.log
 deploy-wallet.json
 **/keypair.json
+.vercel
