@@ -7,8 +7,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Force Webpack bundler for production builds
-  bundler: "webpack",
+  // Transpile @coral-xyz/anchor so Turbopack processes it correctly
+  transpilePackages: ["@coral-xyz/anchor"],
 };
 
 module.exports = nextConfig;
