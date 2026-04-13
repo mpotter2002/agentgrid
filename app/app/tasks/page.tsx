@@ -66,11 +66,11 @@ export default function TasksPage() {
         if (cancelled) {
           return;
         }
-        const counts = allBids.reduce<Record<string, number>>((acc, item) => {
+        const counts = allBids.reduce((acc: Record<string, number>, item: { account: { taskId: string } }) => {
           const taskId = item.account.taskId as string;
           acc[taskId] = (acc[taskId] ?? 0) + 1;
           return acc;
-        }, {});
+        }, {} as Record<string, number>);
         setBidCounts(counts);
       } catch {
         if (!cancelled) {

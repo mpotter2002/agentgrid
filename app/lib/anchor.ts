@@ -42,9 +42,9 @@ export function getPrograms(cluster: Cluster = "devnet") {
 
   const ids = cluster === "devnet" ? PROGRAM_IDS : PROGRAM_IDS; // same IDs for now, use LOCALNET_PROGRAM_IDS for localnet
 
-    const agentGrid = new Program(idls.agentGrid, new PublicKey(ids.agentGrid)) as any;
-    const taskEscrow = new Program(idls.taskEscrow, new PublicKey(ids.taskEscrow)) as any;
-    const reputationChain = new Program(idls.reputationChain, new PublicKey(ids.reputationChain)) as any;
+    const agentGrid = new Program(idls.agentGrid, undefined as any) as any;
+    const taskEscrow = new Program(idls.taskEscrow, undefined as any) as any;
+    const reputationChain = new Program(idls.reputationChain, undefined as any) as any;
 
   return {
     agentGrid,
