@@ -32,6 +32,7 @@ export function getAnchorProvider(wallet: AnchorProvider["wallet"], cluster: Clu
 /**
  * Get typed programs for the given cluster.
  * Returns AgentGrid, TaskEscrow, and ReputationChain programs.
+ * For browser use, creates programs with just a Connection (no wallet required for read-only).
  */
 export function getPrograms(cluster: Cluster = "devnet") {
   const idls = {
@@ -41,10 +42,17 @@ export function getPrograms(cluster: Cluster = "devnet") {
   };
 
   const ids = cluster === "devnet" ? PROGRAM_IDS : PROGRAM_IDS; // same IDs for now, use LOCALNET_PROGRAM_IDS for localnet
+  
+  // Create a connection for read-only operations (browser-safe)
+  const connection = new Connection(CLUSTER_RPC[cluster], "confirmed");
 
-    const agentGrid = new Program(idls.agentGrid, undefined as any) as any;
-    const taskEscrow = new Program(idls.taskEscrow, undefined as any) as any;
-    const reputationChain = new Program(idls.reputationChain, undefined as any) as any;
+  // Create programs with the connection (not a full provider - that's OK for read-only)
+  // @ts-ignore - Program constructor accepts Connection as second arg for read-only
+  const agentGrid = new Program(idls.agentGrid, connection) as any;
+  // @ts-ignore
+  const taskEscrow = new Program(idls.taskEscrow, connection) as any;
+  // @ts-ignore
+  const reputationChain = new Program(idls.reputationChain, connection) as any;
 
   return {
     agentGrid,
