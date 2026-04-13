@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Plus, X, Loader2, UserPlus } from "lucide-react";
+import { Plus, X, Loader2, Bot } from "lucide-react";
 import { useAgent } from "@/hooks/useAgent";
 
 const SUGGESTED_SKILLS = [
@@ -85,32 +86,35 @@ export function RegisterAgentModal({ onRegistered }: RegisterAgentModalProps) {
     }
   };
 
-  if (!wallet.connected) {
-    return (
-      <Button disabled className="bg-slate-700 text-slate-400">
-        <UserPlus className="w-4 h-4 mr-2" />
-        Connect Wallet to Register
-      </Button>
-    );
-  }
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
-          <UserPlus className="w-4 h-4 mr-2" />
-          Register as Agent
+          <Bot className="w-4 h-4 mr-2" />
+          Deploy Agent
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-slate-900 border-slate-800 text-slate-50 max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl">Register as Agent</DialogTitle>
+          <DialogTitle className="text-xl">Deploy Your Agent</DialogTitle>
           <DialogDescription className="text-slate-400">
-            Join the AgentGrid and start earning by completing tasks.
+            Register an autonomous agent on-chain to bid on tasks and earn.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Wallet Connect Step */}
+          {!wallet.connected && (
+            <div className="p-4 bg-indigo-950/30 border border-indigo-800/50 rounded-lg">
+              <p className="text-sm text-indigo-300 mb-3">
+                Connect a wallet to register your agent on devnet.
+              </p>
+              <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-500 !text-white !font-semibold !h-9 !px-4 !rounded-lg !text-sm !border-none !w-full" />
+            </div>
+          )}
+
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Agent Name</Label>
@@ -119,7 +123,8 @@ export function RegisterAgentModal({ onRegistered }: RegisterAgentModalProps) {
               placeholder="e.g., DeFi Researcher"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-slate-800 border-slate-700 text-white"
+              disabled={!wallet.connected}
+              className="bg-slate-800 border-slate-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -134,20 +139,22 @@ export function RegisterAgentModal({ onRegistered }: RegisterAgentModalProps) {
               placeholder="0.5"
               value={rate}
               onChange={(e) => setRate(e.target.value)}
-              className="bg-slate-800 border-slate-700 text-white"
+              disabled={!wallet.connected}
+              className="bg-slate-800 border-slate-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             />
             <p className="text-xs text-slate-500">Minimum 0.001 SOL per hour</p>
           </div>
 
           {/* Skills */}
           <div className="space-y-2">
-            <Label>Skills</Label>
+            <Label>Capabilities</Label>
             <div className="flex flex-wrap gap-2">
               {SUGGESTED_SKILLS.map((skill) => (
                 <button
                   key={skill}
-                  onClick={() => toggleSkill(skill)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  onClick={() => wallet.connected && toggleSkill(skill)}
+                  disabled={!wallet.connected}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     skills.includes(skill)
                       ? "bg-indigo-600 text-white"
                       : "bg-slate-800 text-slate-400 hover:bg-slate-700"
@@ -161,18 +168,20 @@ export function RegisterAgentModal({ onRegistered }: RegisterAgentModalProps) {
             {/* Custom skill input */}
             <div className="flex gap-2 mt-2">
               <Input
-                placeholder="Add custom skill..."
+                placeholder="Add custom capability..."
                 value={customSkill}
                 onChange={(e) => setCustomSkill(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addCustomSkill()}
-                className="bg-slate-800 border-slate-700 text-white text-sm"
+                onKeyDown={(e) => e.key === "Enter" && wallet.connected && addCustomSkill()}
+                disabled={!wallet.connected}
+                className="bg-slate-800 border-slate-700 text-white text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               />
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={addCustomSkill}
-                className="border-slate-700 hover:bg-slate-800"
+                disabled={!wallet.connected}
+                className="border-slate-700 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -217,16 +226,18 @@ export function RegisterAgentModal({ onRegistered }: RegisterAgentModalProps) {
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={loading}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white"
+            disabled={loading || !wallet.connected}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Registering...
+                Deploying...
               </>
+            ) : !wallet.connected ? (
+              "Connect Wallet to Deploy"
             ) : (
-              "Register Agent"
+              "Deploy Agent"
             )}
           </Button>
         </DialogFooter>
