@@ -9,7 +9,6 @@
     "start": "anchor run start"
   },
   "devDependencies": {
-    "@coral-xyz/anchor": "^0.30.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   },
