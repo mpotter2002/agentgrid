@@ -7,6 +7,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Disable Turbopack — use Webpack for build
+  experimental: {
+    turbo: undefined,
+  },
 };
 
 module.exports = nextConfig;
