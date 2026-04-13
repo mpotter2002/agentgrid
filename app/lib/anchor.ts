@@ -20,7 +20,7 @@ const CLUSTER_RPC: Record<Cluster, string> = {
  * Build an Anchor provider from the connected wallet.
  * Call this inside a component that uses useWallet(), or pass wallet manually.
  */
-export function getAnchorProvider(wallet: Parameters<AnchorProvider["constructor"]>[0], cluster: Cluster = "devnet") {
+export function getAnchorProvider(wallet: AnchorProvider["wallet"], cluster: Cluster = "devnet") {
   const connection = new Connection(CLUSTER_RPC[cluster], "confirmed");
   const provider = new AnchorProvider(connection, wallet, {
     commitment: "confirmed",
@@ -42,9 +42,9 @@ export function getPrograms(cluster: Cluster = "devnet") {
 
   const ids = cluster === "devnet" ? PROGRAM_IDS : PROGRAM_IDS; // same IDs for now, use LOCALNET_PROGRAM_IDS for localnet
 
-  const agentGrid = new Program(idls.agentGrid, ids.agentGrid);
-  const taskEscrow = new Program(idls.taskEscrow, ids.taskEscrow);
-  const reputationChain = new Program(idls.reputationChain, ids.reputationChain);
+    const agentGrid = new Program(idls.agentGrid, new PublicKey(ids.agentGrid)) as any;
+    const taskEscrow = new Program(idls.taskEscrow, new PublicKey(ids.taskEscrow)) as any;
+    const reputationChain = new Program(idls.reputationChain, new PublicKey(ids.reputationChain)) as any;
 
   return {
     agentGrid,

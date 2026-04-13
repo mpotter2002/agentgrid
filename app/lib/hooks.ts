@@ -4,18 +4,15 @@
  */
 
 import { useEffect, useState, useCallback } from "react";
-import { useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { Program, BN } from "@coral-xyz/anchor";
+import { BN } from "@coral-xyz/anchor";
 import {
   getPrograms,
   deriveTaskPda,
-  deriveBidPda,
   deriveEscrowPda,
   deriveAgentRecordPda,
 } from "./anchor";
 import type { Cluster } from "./programs";
-import type { CreateTaskParams, PostBidParams } from "./transactions";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -63,46 +60,26 @@ export interface EscrowAccount {
 // ---------------------------------------------------------------------------
 
 export function useTasks(requester?: PublicKey, cluster: Cluster = "devnet") {
-  const { connection } = useConnection();
   const [tasks, setTasks] = useState<TaskAccount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTasks = useCallback(async () => {
-    if (!requester) return;
     setLoading(true);
     setError(null);
     try {
       const { agentGrid } = getPrograms(cluster);
-      // Fetch tasks for this requester by filtering account data
-      // Note: Anchor doesn't support easy "WHERE" filtering client-side
-      // For production, use GPA (getProgramAccounts) with memcmp
-      // Here we use a simple filter on the decoded accounts
-      const accounts = await connection.getProgramAccounts(
-        agentGrid.programId,
-        {
-          filters: [
-            { memcmp: { offset: 0, bytes: requester.toBase58() } },
-          ],
-        }
-      );
-
-      const decoded: TaskAccount[] = [];
-      for (const acc of accounts) {
-        try {
-          const task = await agentGrid.account.task.fetch(acc.pubkey);
-          decoded.push(task as unknown as TaskAccount);
-        } catch {
-          // skip non-task accounts
-        }
-      }
+      const accounts = await agentGrid.account.task.all();
+      const decoded = accounts
+        .map((account) => account.account as unknown as TaskAccount)
+        .filter((task) => !requester || task.requester.equals(requester));
       setTasks(decoded);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to fetch tasks");
     } finally {
       setLoading(false);
     }
-  }, [connection, requester, cluster]);
+  }, [requester, cluster]);
 
   useEffect(() => {
     fetchTasks();
@@ -116,7 +93,6 @@ export function useTasks(requester?: PublicKey, cluster: Cluster = "devnet") {
 // ---------------------------------------------------------------------------
 
 export function useTask(taskId: string, cluster: Cluster = "devnet") {
-  const { connection } = useConnection();
   const [task, setTask] = useState<TaskAccount | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -136,7 +112,7 @@ export function useTask(taskId: string, cluster: Cluster = "devnet") {
     } finally {
       setLoading(false);
     }
-  }, [connection, taskId, cluster]);
+  }, [taskId, cluster]);
 
   useEffect(() => { fetch(); }, [fetch]);
 
@@ -148,7 +124,6 @@ export function useTask(taskId: string, cluster: Cluster = "devnet") {
 // ---------------------------------------------------------------------------
 
 export function useTaskBids(taskId: string, cluster: Cluster = "devnet") {
-  const { connection } = useConnection();
   const [bids, setBids] = useState<BidAccount[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -159,31 +134,17 @@ export function useTaskBids(taskId: string, cluster: Cluster = "devnet") {
     setError(null);
     try {
       const { agentGrid } = getPrograms(cluster);
-      // Use getProgramAccounts to find all bid accounts for this task
-      // The bid PDA seeds are [b"bid", task_id, agent_pubkey]
-      // We need to scan since we don't know the agent pubkeys
-      const allBids = await connection.getProgramAccounts(agentGrid.programId, {
-        filters: [{ dataSize: agentGrid.account.taskBid.size }],
-      });
-
-      const decoded: BidAccount[] = [];
-      for (const acc of allBids) {
-        try {
-          const bid = await agentGrid.account.taskBid.fetch(acc.pubkey);
-          if ((bid as unknown as BidAccount).taskId === taskId) {
-            decoded.push(bid as unknown as BidAccount);
-          }
-        } catch {
-          // skip
-        }
-      }
+      const allBids = await agentGrid.account.taskBid.all();
+      const decoded = allBids
+        .map((account) => account.account as unknown as BidAccount)
+        .filter((bid) => bid.taskId === taskId);
       setBids(decoded);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to fetch bids");
     } finally {
       setLoading(false);
     }
-  }, [connection, taskId, cluster]);
+  }, [taskId, cluster]);
 
   useEffect(() => { fetch(); }, [fetch]);
 
@@ -195,7 +156,6 @@ export function useTaskBids(taskId: string, cluster: Cluster = "devnet") {
 // ---------------------------------------------------------------------------
 
 export function useEscrow(taskId: string, cluster: Cluster = "devnet") {
-  const { connection } = useConnection();
   const [escrow, setEscrow] = useState<EscrowAccount | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -215,7 +175,7 @@ export function useEscrow(taskId: string, cluster: Cluster = "devnet") {
     } finally {
       setLoading(false);
     }
-  }, [connection, taskId, cluster]);
+  }, [taskId, cluster]);
 
   useEffect(() => { fetch(); }, [fetch]);
 
@@ -227,7 +187,6 @@ export function useEscrow(taskId: string, cluster: Cluster = "devnet") {
 // ---------------------------------------------------------------------------
 
 export function useAgentRecord(agent: PublicKey, cluster: Cluster = "devnet") {
-  const { connection } = useConnection();
   const [record, setRecord] = useState<{
     tasksCompleted: number;
     reputationScore: number;
@@ -251,7 +210,7 @@ export function useAgentRecord(agent: PublicKey, cluster: Cluster = "devnet") {
     } finally {
       setLoading(false);
     }
-  }, [connection, agent, cluster]);
+  }, [agent, cluster]);
 
   useEffect(() => { fetch(); }, [fetch]);
 
